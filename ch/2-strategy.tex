@@ -1,0 +1,33 @@
+\chapter{Strategia risolutiva e Architettura proposta}
+
+\section{Decomposizione in Task}
+Nella nostra soluzione prescelta possiamo individuare un unico Task:
+\begin{itemize}
+    \item \textbf{ComputeDocumentTask} \newline
+    Questo task si occupa di caricare in memoria centrale un documento e di suddividerlo in porzioni più piccole denominate Pagine; per ogni Pagina creata, verrà analizzato il testo contenuto. I risultati parziali del conteggio verranno salvati localmente mentre, una volta analizzate tutte le pagine, il risultato andrà ad aggiornare una struttura centrale sincronizzata.
+\end{itemize}
+
+\noindent Ogni ComputeDocumentTask opera in maniera indipendente rispetto agli altri per la maggior parte del suo ciclo di vita, richiedendo meccanismi di sincronizzazione solo al termine del lavoro.
+
+\section{Classe architetturale}
+La classe architetturale che rispecchia al meglio il design del sistema, è quella che va a focalizzarsi sulle strutture dati e sulle risorse condivise, denominata \textbf{Result Parallelism}. In questo modo si ottiene una soluzione che sfrutta il parallelismo al fine di computare simultaneamente le varie sotto-porzioni che costituiranno il risultato finale. Per risolvere questa classe di problema abbiamo scelto di utilizzare l'architettura concorrente \textbf{Master-Workers}.
+
+\subsection{Master-Workers}
+L'architettura Master-Workers è caratterizzata da tre entità:
+\begin{itemize}
+    \item \textbf{Bag of tasks} \newline
+    \`E la struttura dati di coordinazione contenente i task da eseguire.
+    \item \textbf{Master agent} \newline
+    Si occupa di decomporre il task globale in sotto-task, i quali vengono inseriti nella bag of tasks, e di istanziare dei Worker agent. Nel nostro caso, il suo compito è quello di creare un ComputeDocumentTask per ogni documento all'interno della directory.
+    \item \textbf{Worker agent} \newline
+    Recupera un task dalla bag of task e si occupa di eseguirlo.
+\end{itemize}
+
+
+% Descrizione della strategia risolutiva e dell’architettura proposta, sempre
+% focalizzando l’attenzione su aspetti relativi alla concorrenza.
+
+%bellino
+%\begin{info}[Reminder:\newline]{
+%\textbf{3.} Vengono estratte le parole da ogni pagina e vengono inserite all’interno %di unastruttura dati comune}
+%\end{info}
